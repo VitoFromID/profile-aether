@@ -280,5 +280,111 @@ function init() {
   console.log('%c[Profil Diri] Klik icon ✏️ di pojok kanan atas atau tekan E untuk edit data', 'color:#00f0ff');
 }
 
+// ========================================
+// STARFIELD BACKGROUND (Ruang Angkasa + Parallax)
+// ========================================
+let canvas, ctx;
+let stars = [];
+let scrollSpeed = 0.3; // kecepatan dasar bintang ke atas
+
+function initStarfield() {
+  canvas = document.getElementById('starfield');
+  if (!canvas) return;
+  
+  ctx = canvas.getContext('2d', { alpha: true });
+  
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  // Buat bintang-bintang
+  stars = [];
+  const starCount = Math.min(220, Math.floor(window.innerWidth * window.innerHeight / 4500));
+  
+  for (let i = 0; i < starCount; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 2.2 + 0.6,
+      speed: Math.random() * 0.4 + 0.15,
+      opacity: Math.random() * 0.7 + 0.3,
+      twinkle: Math.random() * 0.03 + 0.01
+    });
+  }
+  
+  // Event scroll untuk parallax
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+    const delta = currentScroll - lastScrollY;
+    // Saat scroll ke bawah, bintang terasa lebih cepat ke atas
+    scrollSpeed = 0.3 + Math.min(Math.abs(delta) * 0.08, 2.5);
+    lastScrollY = currentScroll;
+  });
+  
+  // Reset speed pelan-pelan
+  setInterval(() => {
+    scrollSpeed = Math.max(0.3, scrollSpeed * 0.92);
+  }, 120);
+  
+  requestAnimationFrame(animateStars);
+}
+
+function animateStars() {
+  if (!ctx || !canvas) return;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  for (let star of stars) {
+    // Gerakkan bintang ke atas (parallax)
+    star.y -= star.speed * scrollSpeed * 1.6;
+    
+    // Kalau keluar layar atas, muncul lagi di bawah
+    if (star.y < 0) {
+      star.y = canvas.height;
+      star.x = Math.random() * canvas.width;
+    }
+    
+    // Twinkle effect
+    star.opacity += star.twinkle * (Math.random() > 0.5 ? 1 : -1);
+    star.opacity = Math.max(0.25, Math.min(1, star.opacity));
+    
+    // Gambar bintang dengan glow
+    ctx.save();
+    ctx.globalAlpha = star.opacity;
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#a5f3fc';
+    ctx.shadowBlur = star.size > 1.8 ? 8 : 3;
+    
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    
+    // Beberapa bintang lebih terang (cross)
+    if (star.size > 1.7) {
+      ctx.save();
+      ctx.globalAlpha = star.opacity * 0.6;
+      ctx.strokeStyle = '#bae6fd';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(star.x - star.size * 2.2, star.y);
+      ctx.lineTo(star.x + star.size * 2.2, star.y);
+      ctx.moveTo(star.x, star.y - star.size * 2.2);
+      ctx.lineTo(star.x, star.y + star.size * 2.2);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+  
+  requestAnimationFrame(animateStars);
+}
+
 // Boot app
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  initStarfield(); // Jalankan background ruang angkasa
+});

@@ -24,14 +24,23 @@
 
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
+  background: #05050a;
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
   padding: 16px;
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(255, 77, 148, 0.03) 0%, transparent 50%);
+  overflow-x: hidden;
+}
+
+/* Canvas Background Ruang Angkasa */
+#starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Container */
@@ -479,28 +488,57 @@ textarea::-webkit-scrollbar-thumb {
   border-radius: 3px;
 }
 
-/* Tombol WhatsApp baru */
+/* Tombol WhatsApp SUPER KEREN (100x lebih bagus) */
 .wa-btn {
   margin-top: 16px;
-  padding: 10px 20px;
-  background: #25D366;
+  padding: 14px 28px;
+  background: linear-gradient(90deg, #25D366, #128C7E);
   color: white;
   border: none;
   border-radius: 9999px;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: 800;
+  font-size: 1rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  gap: 10px;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 
+    0 0 0 1px rgba(37, 211, 102, 0.4),
+    0 10px 30px -10px rgba(37, 211, 102, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.wa-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+  transition: 0.6s;
+}
+
+.wa-btn:hover::before {
+  left: 250%;
 }
 
 .wa-btn:hover {
-  background: #128C7E;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 0 0 1px rgba(37, 211, 102, 0.6),
+    0 15px 40px -10px rgba(37, 211, 102, 0.6);
+}
+
+.wa-icon {
+  font-size: 1.15rem;
 }
 
 /* Icon Edit kecil di pojok kanan atas header */
@@ -545,4 +583,4 @@ textarea::-webkit-scrollbar-thumb {
   gap: 5px;
   box-shadow: 0 4px 15px rgba(255, 77, 148, 0.4);
   z-index: 200;
-   }
+     }

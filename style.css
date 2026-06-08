@@ -478,3 +478,71 @@ textarea::-webkit-scrollbar-thumb {
   background: var(--accent-cyan);
   border-radius: 3px;
 }
+
+/* Tombol WhatsApp baru */
+.wa-btn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: #25D366;
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.wa-btn:hover {
+  background: #128C7E;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+/* Icon Edit kecil di pojok kanan atas header */
+.edit-icon-header {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  width: 42px;
+  height: 42px;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 150;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 0.2);
+}
+
+.edit-icon-header:hover {
+  background: rgba(0, 240, 255, 0.15);
+  transform: scale(1.1) rotate(15deg);
+  border-color: var(--accent-cyan);
+}
+
+/* Edit mode indicator lebih kecil */
+.edit-mode-indicator {
+  position: fixed;
+  top: 22px;
+  right: 76px;
+  background: var(--accent-pink);
+  color: white;
+  font-size: 0.7rem;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 15px rgba(255, 77, 148, 0.4);
+  z-index: 200;
+   }

@@ -232,11 +232,11 @@ header {
 
 /* Glass Card */
 .card {
-  background: var(--card-bg);
+  background: rgba(26, 26, 46, 0.55);
   border-radius: 20px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px);
   box-shadow: 0 10px 30px -15px rgb(0 0 0 / 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -541,46 +541,4 @@ textarea::-webkit-scrollbar-thumb {
   font-size: 1.15rem;
 }
 
-/* Icon Edit kecil di pojok kanan atas header */
-.edit-icon-header {
-  position: fixed;
-  top: 22px;
-  right: 24px;
-  width: 42px;
-  height: 42px;
-  background: var(--card-bg);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  cursor: pointer;
-  z-index: 150;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgb(0 0 0 / 0.2);
-}
-
-.edit-icon-header:hover {
-  background: rgba(0, 240, 255, 0.15);
-  transform: scale(1.1) rotate(15deg);
-  border-color: var(--accent-cyan);
-}
-
-/* Edit mode indicator lebih kecil */
-.edit-mode-indicator {
-  position: fixed;
-  top: 22px;
-  right: 76px;
-  background: var(--accent-pink);
-  color: white;
-  font-size: 0.7rem;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  font-weight: 600;
-  display: none;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 4px 15px rgba(255, 77, 148, 0.4);
-  z-index: 200;
-                   }
+/* (Edit icon & indicator sudah dihapus sesuai permintaan user) */

@@ -27,13 +27,10 @@ const els = {
   origin: null,
   bio: null,
   hobbiesContainer: null,
-  editIcon: null,           // icon edit kecil di header (pengganti tombol besar)
-  waBtn: null               // tombol chat WhatsApp
+  waBtn: null
 };
 
-let isEditing = false;
-let hobbiesTextarea = null;
-let editModeActive = false; // untuk icon edit kecil
+// Mode edit sudah dihapus total sesuai permintaan user (read-only)
 
 // Load from localStorage
 function loadData() {
@@ -85,125 +82,7 @@ function renderHobbies() {
   });
 }
 
-// Toggle edit mode (pakai icon kecil di header)
-function toggleEditMode() {
-  editModeActive = !editModeActive;
-  isEditing = editModeActive;
-  
-  const cardContainer = document.querySelector('.cards-grid');
-  const hero = document.querySelector('.hero');
-  const editIcon = els.editIcon;
-  
-  if (editModeActive) {
-    // Masuk mode edit
-    cardContainer.classList.add('editing');
-    hero.classList.add('editing');
-    
-    makeFieldsEditable();
-    switchToHobbiesEdit();
-    
-    if (editIcon) editIcon.innerHTML = '✅'; // ganti icon jadi centang
-    els.indicator.classList.add('show');
-    
-  } else {
-    // Keluar mode edit + simpan
-    cardContainer.classList.remove('editing');
-    hero.classList.remove('editing');
-    
-    collectAndSaveData();
-    renderHobbies();
-    
-    if (editIcon) editIcon.innerHTML = '✏️';
-    els.indicator.classList.remove('show');
-    
-    saveData();
-  }
-}
-
-// Make simple fields contenteditable
-function makeFieldsEditable() {
-  const editableFields = [
-    { el: els.name, key: 'name' },
-    { el: els.birthdate, key: 'birthdate' },
-    { el: els.birthplace, key: 'birthplace' },
-    { el: els.origin, key: 'origin' },
-    { el: els.bio, key: 'bio' }
-  ];
-  
-  editableFields.forEach(({ el, key }) => {
-    if (!el) return;
-    
-    el.contentEditable = true;
-    el.classList.add('editable');
-    
-    // Auto update on input (debounced)
-    let timeout;
-    el.addEventListener('input', () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        profileData[key] = el.textContent.trim();
-      }, 300);
-    });
-    
-    // Prevent newlines in single line fields
-    if (key !== 'bio') {
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          el.blur();
-        }
-      });
-    }
-  });
-}
-
-// Switch hobbies section to editable textarea
-function switchToHobbiesEdit() {
-  if (!els.hobbiesContainer) return;
-  
-  // Hide tags container
-  els.hobbiesContainer.style.display = 'none';
-  
-  // Create textarea
-  hobbiesTextarea = document.createElement('textarea');
-  hobbiesTextarea.className = 'hobbies-edit';
-  hobbiesTextarea.value = profileData.hobbies.join('\n');
-  hobbiesTextarea.placeholder = 'Satu hobi per baris...';
-  
-  // Insert after header
-  const hobbiesCard = els.hobbiesContainer.parentElement;
-  hobbiesCard.appendChild(hobbiesTextarea);
-  
-  // Focus
-  setTimeout(() => hobbiesTextarea.focus(), 50);
-}
-
-// Collect data from editable fields + hobbies textarea
-function collectAndSaveData() {
-  // Simple fields already updated via input listeners
-  
-  // Bio & others already synced
-  
-  // Hobbies from textarea
-  if (hobbiesTextarea) {
-    const lines = hobbiesTextarea.value
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
-    
-    if (lines.length > 0) {
-      profileData.hobbies = lines;
-    }
-    
-    // Remove textarea and show tags again
-    hobbiesTextarea.remove();
-    hobbiesTextarea = null;
-    els.hobbiesContainer.style.display = 'flex';
-  }
-  
-  // Re-render to clean up any formatting
-  renderProfile();
-}
+// (Semua fungsi edit mode sudah dihapus total sesuai permintaan user)
 
 // Show toast notification
 function showToast(message) {
@@ -224,7 +103,7 @@ function showToast(message) {
   }, 2200);
 }
 
-// Initialize everything
+// Initialize everything (READ-ONLY)
 function init() {
   // Cache DOM elements
   els.name = document.getElementById('profile-name');
@@ -233,21 +112,13 @@ function init() {
   els.origin = document.getElementById('info-origin');
   els.bio = document.getElementById('bio-text');
   els.hobbiesContainer = document.getElementById('hobbies-list');
-  
-  els.editIcon = document.getElementById('edit-icon');   // icon edit kecil
-  els.waBtn = document.getElementById('wa-btn');         // tombol WhatsApp
-  els.indicator = document.getElementById('edit-indicator');
+  els.waBtn = document.getElementById('wa-btn');
   
   // Load saved data
   loadData();
   
   // Initial render
   renderProfile();
-  
-  // Edit icon listener (pengganti tombol besar)
-  if (els.editIcon) {
-    els.editIcon.addEventListener('click', toggleEditMode);
-  }
   
   // WhatsApp button
   if (els.waBtn) {
@@ -257,14 +128,6 @@ function init() {
       window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
     });
   }
-  
-  // Keyboard shortcut: tekan E untuk toggle edit
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'e' && document.activeElement.tagName === 'BODY') {
-      e.preventDefault();
-      toggleEditMode();
-    }
-  });
   
   // Easter egg: klik logo untuk reset data
   const logo = document.querySelector('.logo');
@@ -277,7 +140,7 @@ function init() {
     });
   }
   
-  console.log('%c[Profil Diri] Klik icon ✏️ di pojok kanan atas atau tekan E untuk edit data', 'color:#00f0ff');
+  console.log('%c[Profil Diri] Read-only mode aktif (edit sudah dihapus total)', 'color:#00f0ff');
 }
 
 // ========================================
@@ -315,20 +178,27 @@ function initStarfield() {
     });
   }
   
-  // Event scroll untuk parallax
+  // Event scroll untuk parallax natural
   let lastScrollY = window.scrollY;
   window.addEventListener('scroll', () => {
     const currentScroll = window.scrollY;
     const delta = currentScroll - lastScrollY;
-    // Saat scroll ke bawah, bintang terasa lebih cepat ke atas
-    scrollSpeed = 0.3 + Math.min(Math.abs(delta) * 0.08, 2.5);
+    
+    if (delta > 0) {
+      // Scroll ke BAWAH → bintang ke ATAS lebih cepat
+      scrollSpeed = 0.4 + Math.min(delta * 0.12, 3.5);
+    } else {
+      // Scroll ke ATAS → bintang sedikit ke BAWAH (efek kamera)
+      scrollSpeed = 0.15 + Math.min(Math.abs(delta) * 0.06, 1.2);
+    }
+    
     lastScrollY = currentScroll;
   });
   
-  // Reset speed pelan-pelan
+  // Reset speed pelan-pelan ke default
   setInterval(() => {
-    scrollSpeed = Math.max(0.3, scrollSpeed * 0.92);
-  }, 120);
+    scrollSpeed = Math.max(0.25, scrollSpeed * 0.88);
+  }, 100);
   
   requestAnimationFrame(animateStars);
 }

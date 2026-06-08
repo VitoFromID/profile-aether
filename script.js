@@ -3,13 +3,13 @@
 // Vanilla JS • localStorage persistence
 // ========================================
 
-// Default data (ganti dengan data kamu di sini atau via edit mode)
+// Default data (sudah diisi sesuai permintaanmu - nama samaran "aether")
 let profileData = {
-  name: "Vito",
-  birthdate: "— (isi tanggal lahirmu)",
-  birthplace: "— (isi tempat lahirmu)",
-  origin: "Semarang, Jawa Tengah, Indonesia",
-  bio: "Seorang enthusiast motor dan web developer yang sedang fokus mengarahkan energi ke hal-hal produktif. Sedang dalam proses reboot untuk lebih fokus ke modifikasi motor, membangun project web interaktif, dan self-improvement. Gaspol! 🔥",
+  name: "aether",
+  birthdate: "19 Agustus 2011",
+  birthplace: "Kudus",
+  origin: "Kudus, Jawa Tengah, Indonesia",
+  bio: "Seorang enthusiast motor dan web developer yang sedang fokus mengarahkan energi ke hal-hal produktif. Membangun project web interaktif dan self-improvement. Gaspol! 🔥",
   hobbies: [
     "Modifikasi & Maintenance Motor",
     "Web Development (HTML/CSS/JS + Neon Effects)",
@@ -27,13 +27,13 @@ const els = {
   origin: null,
   bio: null,
   hobbiesContainer: null,
-  editBtn: null,
-  saveBtn: null,
-  indicator: null
+  editIcon: null,           // icon edit kecil di header (pengganti tombol besar)
+  waBtn: null               // tombol chat WhatsApp
 };
 
 let isEditing = false;
 let hobbiesTextarea = null;
+let editModeActive = false; // untuk icon edit kecil
 
 // Load from localStorage
 function loadData() {
@@ -85,46 +85,37 @@ function renderHobbies() {
   });
 }
 
-// Toggle edit mode
+// Toggle edit mode (pakai icon kecil di header)
 function toggleEditMode() {
-  isEditing = !isEditing;
+  editModeActive = !editModeActive;
+  isEditing = editModeActive;
   
   const cardContainer = document.querySelector('.cards-grid');
   const hero = document.querySelector('.hero');
+  const editIcon = els.editIcon;
   
-  if (isEditing) {
-    // Enter edit mode
+  if (editModeActive) {
+    // Masuk mode edit
     cardContainer.classList.add('editing');
     hero.classList.add('editing');
     
-    // Make fields editable
     makeFieldsEditable();
-    
-    // Change hobbies to textarea
     switchToHobbiesEdit();
     
-    // Update buttons
-    els.editBtn.style.display = 'none';
-    els.saveBtn.style.display = 'flex';
+    if (editIcon) editIcon.innerHTML = '✅'; // ganti icon jadi centang
     els.indicator.classList.add('show');
     
   } else {
-    // Exit edit mode + save
+    // Keluar mode edit + simpan
     cardContainer.classList.remove('editing');
     hero.classList.remove('editing');
     
-    // Collect values from DOM
     collectAndSaveData();
-    
-    // Re-render hobbies as tags
     renderHobbies();
     
-    // Update buttons
-    els.editBtn.style.display = 'flex';
-    els.saveBtn.style.display = 'none';
+    if (editIcon) editIcon.innerHTML = '✏️';
     els.indicator.classList.remove('show');
     
-    // Save
     saveData();
   }
 }
@@ -243,8 +234,8 @@ function init() {
   els.bio = document.getElementById('bio-text');
   els.hobbiesContainer = document.getElementById('hobbies-list');
   
-  els.editBtn = document.getElementById('edit-btn');
-  els.saveBtn = document.getElementById('save-btn');
+  els.editIcon = document.getElementById('edit-icon');   // icon edit kecil
+  els.waBtn = document.getElementById('wa-btn');         // tombol WhatsApp
   els.indicator = document.getElementById('edit-indicator');
   
   // Load saved data
@@ -253,16 +244,21 @@ function init() {
   // Initial render
   renderProfile();
   
-  // Button listeners
-  if (els.editBtn) {
-    els.editBtn.addEventListener('click', toggleEditMode);
+  // Edit icon listener (pengganti tombol besar)
+  if (els.editIcon) {
+    els.editIcon.addEventListener('click', toggleEditMode);
   }
   
-  if (els.saveBtn) {
-    els.saveBtn.addEventListener('click', toggleEditMode);
+  // WhatsApp button
+  if (els.waBtn) {
+    els.waBtn.addEventListener('click', () => {
+      const phone = '6283834652308';
+      const text = encodeURIComponent('Halo aether! 👋');
+      window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+    });
   }
   
-  // Keyboard shortcut: press E to toggle edit
+  // Keyboard shortcut: tekan E untuk toggle edit
   document.addEventListener('keydown', (e) => {
     if (e.key.toLowerCase() === 'e' && document.activeElement.tagName === 'BODY') {
       e.preventDefault();
@@ -270,7 +266,7 @@ function init() {
     }
   });
   
-  // Easter egg: click logo to reset data (with confirm)
+  // Easter egg: klik logo untuk reset data
   const logo = document.querySelector('.logo');
   if (logo) {
     logo.addEventListener('click', () => {
@@ -281,15 +277,7 @@ function init() {
     });
   }
   
-  // Initial hint
-  console.log('%c[Profil Diri] Tekan tombol Edit atau tekan huruf E di keyboard untuk mode edit', 'color:#00f0ff');
-  
-  // Welcome toast on first visit (optional)
-  if (!localStorage.getItem('profilDiriData')) {
-    setTimeout(() => {
-      // showToast('Selamat datang! Tekan "Edit Profile" untuk isi data kamu');
-    }, 1800);
-  }
+  console.log('%c[Profil Diri] Klik icon ✏️ di pojok kanan atas atau tekan E untuk edit data', 'color:#00f0ff');
 }
 
 // Boot app

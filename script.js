@@ -5,7 +5,7 @@
 
 // Default data (sudah diisi sesuai permintaanmu - nama samaran "aether")
 let profileData = {
-  name: "aether",
+  name: "𝐀𝐄𝐓𝐇𝐄𝐑",
   birthdate: "19 Agustus 2011",
   birthplace: "Kudus",
   origin: "Kudus, Jawa Tengah, Indonesia",
